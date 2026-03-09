@@ -1,0 +1,258 @@
+[
+  {
+    "name": "Scrambled Eggs",
+    "sku": "6903_127217_M859_1_25416",
+    "nutrients": {
+      "calories": 142.126,
+      "cholesterol": 367.046,
+      "dietary_fiber": 0.135,
+      "protein": 12.382,
+      "saturated_fat": 3.083,
+      "sodium": 315.208,
+      "sugars": 0.356,
+      "total_carbohydrates": 0.737,
+      "total_fat": 9.385,
+      "trans_fat": 0.098
+    }
+  },
+  {
+    "name": "Hard-Cooked Egg",
+    "sku": "6903_127217_M6341_1_27652",
+    "nutrients": {
+      "calories": 69.924,
+      "cholesterol": 181.899,
+      "dietary_fiber": 0,
+      "protein": 6.142,
+      "saturated_fat": 1.529,
+      "sodium": 72.983,
+      "sugars": 0.181,
+      "total_carbohydrates": 0.352,
+      "total_fat": 4.65,
+      "trans_fat": 0.019
+    }
+  },
+  {
+    "name": "Glen Breakfast Pizza",
+    "sku": "6903_127217_L406751_1_482466",
+    "nutrients": {
+      "calories": 525.822,
+      "cholesterol": 171.154,
+      "dietary_fiber": 1.923,
+      "protein": 22.144,
+      "saturated_fat": 11.708,
+      "sodium": 1128.872,
+      "sugars": 3.198,
+      "total_carbohydrates": 48.877,
+      "total_fat": 26.789,
+      "trans_fat": 0.509
+    }
+  },
+  {
+    "name": "Vegan Egg & Cheese Bagel",
+    "sku": "6903_127217_L374686_1_392710",
+    "nutrients": {
+      "calories": 348.501,
+      "cholesterol": 0.029,
+      "dietary_fiber": 1.163,
+      "protein": 13.712,
+      "saturated_fat": 5.378,
+      "sodium": 804.937,
+      "sugars": 4.046,
+      "total_carbohydrates": 43.877,
+      "total_fat": 12.87,
+      "trans_fat": 0.07
+    }
+  },
+  {
+    "name": "Sausage, Egg & Cheese Muffin",
+    "sku": "6903_127217_M15766_1_45534",
+    "nutrients": {
+      "calories": 449.995,
+      "cholesterol": 246.944,
+      "dietary_fiber": 1.012,
+      "protein": 18.685,
+      "saturated_fat": 10.835,
+      "sodium": 499.946,
+      "sugars": 1.526,
+      "total_carbohydrates": 22.953,
+      "total_fat": 30.071,
+      "trans_fat": 0.175
+    }
+  },
+  {
+    "name": "Grilled Ham Steak",
+    "sku": "6903_127217_M35997_1_30165",
+    "nutrients": {
+      "calories": 69.445,
+      "cholesterol": 28.46,
+      "dietary_fiber": 0,
+      "protein": 8.949,
+      "saturated_fat": 1.014,
+      "sodium": 743.24,
+      "sugars": 1.177,
+      "total_carbohydrates": 1.981,
+      "total_fat": 2.9,
+      "trans_fat": 0
+    }
+  },
+  {
+    "name": "Turkey Sausage Link",
+    "sku": "6903_127217_M10587_1_21442",
+    "nutrients": {
+      "calories": 96.874,
+      "cholesterol": 41.775,
+      "dietary_fiber": 0,
+      "protein": 8.766,
+      "saturated_fat": 2.098,
+      "sodium": 367.268,
+      "sugars": 0.051,
+      "total_carbohydrates": 0.55,
+      "total_fat": 6.719,
+      "trans_fat": 0.028
+    }
+  },
+  {
+    "name": "O'Brien Potatoes",
+    "sku": "6903_127217_M9734_1_38425",
+    "nutrients": {
+      "calories": 140.846,
+      "cholesterol": 0,
+      "dietary_fiber": 1.716,
+      "protein": 1.46,
+      "saturated_fat": 0.487,
+      "sodium": 204.732,
+      "sugars": 0.745,
+      "total_carbohydrates": 17.746,
+      "total_fat": 6.872,
+      "trans_fat": 0.103
+    }
+  },
+  {
+    "name": "Crispy Tater Tots",
+    "sku": "6903_127217_M10413_1_9017",
+    "nutrients": {
+      "calories": 100.376,
+      "cholesterol": 0,
+      "dietary_fiber": 1.053,
+      "protein": 1.001,
+      "saturated_fat": 0.761,
+      "sodium": 284.817,
+      "sugars": 0.546,
+      "total_carbohydrates": 12.658,
+      "total_fat": 5.584,
+      "trans_fat": 0.085
+    }
+  },
+  {
+    "name": "Assorted Breakfast Pastries",
+    "sku": "6903_127217_L369405_1_389131",
+    "nutrients": {
+      "calories": 1473.721,
+      "cholesterol": 43.97,
+      "dietary_fiber": 3.912,
+      "protein": 20.794,
+      "saturated_fat": 36.188,
+      "sodium": 1733.035,
+      "sugars": 79.095,
+      "total_carbohydrates": 206.711,
+      "total_fat": 72.249,
+      "trans_fat": 1.063
+    }
+  },
+  {
+    "name": "Banana Buttermilk Pancake",
+    "sku": "6903_127217_M40685_1_35150",
+    "nutrients": {
+      "calories": 163.071,
+      "cholesterol": 0.536,
+      "dietary_fiber": 1.638,
+      "protein": 4.348,
+      "saturated_fat": 0.446,
+      "sodium": 416.173,
+      "sugars": 8.884,
+      "total_carbohydrates": 35.31,
+      "total_fat": 1.181,
+      "trans_fat": 0.003
+    }
+  },
+  {
+    "name": "Iced Cinnamon Roll",
+    "sku": "6903_127217_M16738_1_37395",
+    "nutrients": {
+      "calories": 349.392,
+      "cholesterol": 2.034,
+      "dietary_fiber": 1.705,
+      "protein": 6.064,
+      "saturated_fat": 7.585,
+      "sodium": 442.415,
+      "sugars": 19.185,
+      "total_carbohydrates": 46.519,
+      "total_fat": 15.262,
+      "trans_fat": 0.068
+    }
+  },
+  {
+    "name": "Cinnamon Apple Muffin",
+    "sku": "6903_127217_M649_1_5541",
+    "nutrients": {
+      "calories": 315.08,
+      "cholesterol": 2.658,
+      "dietary_fiber": 1.56,
+      "protein": 2.947,
+      "saturated_fat": 3.999,
+      "sodium": 446.515,
+      "sugars": 33.438,
+      "total_carbohydrates": 58.528,
+      "total_fat": 8.022,
+      "trans_fat": 0
+    }
+  },
+  {
+    "name": "Old Fashioned Oatmeal",
+    "sku": "6903_127217_M34520_1_40978",
+    "nutrients": {
+      "calories": 106.14,
+      "cholesterol": 0,
+      "dietary_fiber": 2.754,
+      "protein": 3.923,
+      "saturated_fat": 0.396,
+      "sodium": 5.994,
+      "sugars": 0.295,
+      "total_carbohydrates": 20.021,
+      "total_fat": 2.123,
+      "trans_fat": 0
+    }
+  },
+  {
+    "name": "Grits",
+    "sku": "6903_127217_M34521_1_23428",
+    "nutrients": {
+      "calories": 90.091,
+      "cholesterol": 0,
+      "dietary_fiber": 1.248,
+      "protein": 2.285,
+      "saturated_fat": 0.042,
+      "sodium": 74.356,
+      "sugars": 0.076,
+      "total_carbohydrates": 20.679,
+      "total_fat": 0.312,
+      "trans_fat": 0
+    }
+  },
+  {
+    "name": "Incogmeato™ Sausage Patty",
+    "sku": "6903_127217_M33413_1_42247",
+    "nutrients": {
+      "calories": 71.039,
+      "cholesterol": 0.38,
+      "dietary_fiber": 0.874,
+      "protein": 9.003,
+      "saturated_fat": 0.418,
+      "sodium": 254.144,
+      "sugars": 0.494,
+      "total_carbohydrates": 3.875,
+      "total_fat": 2.659,
+      "trans_fat": 0
+    }
+  }
+]

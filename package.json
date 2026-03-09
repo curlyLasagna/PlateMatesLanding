@@ -11,10 +11,14 @@
   "dependencies": {
     "@astrojs/react": "^4.4.2",
     "@tailwindcss/vite": "^4.2.1",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^25.3.5",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "astro": "^5.17.1",
     "lucide-react": "^0.577.0",
+    "playwright": "^1.58.2",
+    "playwright-chromium": "^1.58.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "tailwindcss": "^4.2.1"
