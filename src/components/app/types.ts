@@ -5,6 +5,11 @@ export interface Macros {
   f: number;
 }
 
+export interface HackItem {
+  name: string;
+  macros: Macros;
+}
+
 export interface Hack {
   id: number;
   user: string;
@@ -15,6 +20,7 @@ export interface Hack {
   likes: number;
   verifications: number;
   image: string;
+  items: HackItem[];
 }
 
 export type Tab = 'feed' | 'scan' | 'stats' | 'summary';

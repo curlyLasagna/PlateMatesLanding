@@ -6,9 +6,10 @@ interface HackCardProps {
   onLike: (id: number) => void;
   onVerify: (id: number) => void;
   onLog: (hack: Hack) => void;
+  onImageClick: (hack: Hack) => void;
 }
 
-const HackCard: React.FC<HackCardProps> = ({ hack, onLike, onVerify, onLog }) => {
+const HackCard: React.FC<HackCardProps> = ({ hack, onLike, onVerify, onLog, onImageClick }) => {
   return (
     <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
       {/* Post Header */}
@@ -26,7 +27,10 @@ const HackCard: React.FC<HackCardProps> = ({ hack, onLike, onVerify, onLog }) =>
       </div>
 
       {/* Image with Macro Overlay */}
-      <div className="relative aspect-video">
+      <div 
+        className="relative aspect-video cursor-pointer"
+        onClick={() => onImageClick(hack)}
+      >
         <img src={hack.image} alt={hack.title} className="w-full h-full object-cover" />
         <div className="absolute top-3 left-3 flex flex-wrap gap-1">
           <div className="bg-white/90 backdrop-blur px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm border border-emerald-100">
@@ -63,7 +67,7 @@ const HackCard: React.FC<HackCardProps> = ({ hack, onLike, onVerify, onLog }) =>
               className="flex items-center gap-1 text-slate-600 hover:text-emerald-600 transition-colors"
             >
               <CheckCircle size={18} className={hack.verifications > 5 ? "text-emerald-500" : ""} />
-              <span className="text-xs font-bold">{hack.verifications} verify</span>
+              <span className="text-xs font-bold">{hack.verifications} logged</span>
             </button>
           </div>
           <button 
