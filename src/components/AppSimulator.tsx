@@ -442,10 +442,6 @@ const PlateMatesApp: React.FC = () => {
           <div className="p-4">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tighter italic">Today's Macros</h2>
-              <div className="flex gap-1">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase">Live Update</span>
-              </div>
             </div>
 
             {/* Real-time Stats Cards */}
