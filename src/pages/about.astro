@@ -1,0 +1,92 @@
+---
+import '../styles/global.css';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>About | PlateMates</title>
+	</head>
+	<body class="bg-slate-50 text-slate-900 font-sans">
+		<!-- Navbar -->
+		<nav class="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-slate-100">
+			<div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+				<div class="flex items-center gap-2">
+					<a href="/" class="text-2xl font-black text-emerald-600 tracking-tighter italic">PLATEMATES</a>
+				</div>
+				<div class="hidden md:flex items-center gap-8 text-sm font-bold text-slate-600">
+					<a href="/#features" class="hover:text-emerald-600 transition-colors">Features</a>
+					<a href="/about" class="text-emerald-600 transition-colors">About</a>
+				</div>
+				<a href="https://forms.office.com/r/QMBGCmQ4dF" target="_blank" class="bg-emerald-600 text-white px-6 py-2.5 rounded-full font-bold text-sm hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-200">
+					Join Waitlist
+				</a>
+			</div>
+		</nav>
+
+		<main class="pt-32 pb-20 px-6">
+			<div class="max-w-4xl mx-auto">
+				<h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter italic uppercase mb-8 text-center">About PlateMates</h1>
+				
+				<div class="bg-white rounded-3xl p-8 md:p-12 border border-slate-100 shadow-sm">
+					<div class="space-y-6 text-slate-600 leading-relaxed">
+						<p>
+							<span class="font-bold text-emerald-600">PlateMates</span> is an idea born out of Towson University's <span class="font-bold">College Cup</span> competition, hosted by the <span class="font-bold text-slate-800">StarTUp</span> — Towson's hub for student entrepreneurship and innovation.
+						</p>
+						
+						<p>
+							The founder, <span class="font-bold text-slate-800">Luis</span>, is a gym rat who's passionate about tracking his macros to fuel his workouts. But here's the thing — he also loves exploring different cuisines and trying new meal combinations at the dining hall. The problem? Finding accurate nutrition information for dining hall food is a hassle. Scrolling through confusing databases, guessing portion sizes, and manually calculating macros takes the fun out of eating.
+						</p>
+						
+						<p>
+							That's why PlateMates was created: to make tracking macros at campus dining halls <span class="font-bold text-emerald-600">easy, social, and actually fun</span>. Share your favorite "meal hacks," discover what other students are eating, and never guess your macros again.
+						</p>
+					</div>
+					
+					<div class="mt-8 pt-8 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+						<div class="flex items-center gap-3">
+							<div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center text-white font-black text-lg">L</div>
+							<div>
+								<p class="font-bold text-slate-800">Luis</p>
+								<p class="text-sm text-slate-500">Founder & Gym Rat</p>
+							</div>
+						</div>
+						<div class="flex items-center gap-2 text-sm text-slate-500">
+							<span class="font-bold text-slate-800">Towson University</span>
+							<span>•</span>
+							<span>College Cup 2025</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="mt-12 text-center">
+					<a href="/" class="inline-flex items-center gap-2 text-emerald-600 font-bold hover:text-emerald-700 transition-colors">
+						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+						Back to Home
+					</a>
+				</div>
+			</div>
+		</main>
+
+		<!-- Footer -->
+		<footer class="bg-white border-t border-slate-100 pt-16 pb-8 px-6">
+			<div class="max-w-7xl mx-auto">
+				<div class="grid md:grid-cols-4 gap-12 mb-12">
+					<div class="col-span-2">
+						<span class="text-2xl font-black text-emerald-600 tracking-tighter italic uppercase">PLATEMATES</span>
+						<p class="mt-4 text-slate-500 max-w-xs leading-relaxed text-sm">
+							A "meal Hack" sharing social app
+						</p>
+					</div>
+				</div>
+				<div class="border-t border-slate-50 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+					<p class="text-xs text-slate-400 font-medium">© 2024 PlateMates Inc. Built for the gains.</p>
+				</div>
+			</div>
+		</footer>
+	</body>
+</html>
