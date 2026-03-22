@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Camera, Search, Navigation, Flame, Beef, Zap, Plus, Utensils, History } from 'lucide-react';
+import { Camera, Navigation, Flame, Beef, Zap, Plus, Utensils, History, SlidersHorizontal, X } from 'lucide-react';
 import type { Hack, Tab, NutrientData, LoggedMeal } from './app/types';
 import Header from './app/Header';
 import HackCard from './app/HackCard';
@@ -12,6 +12,10 @@ import nutrientDataRaw from '../../nutrient_aggregation.json';
 const PlateMatesApp: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('feed');
   const [loggedMeals, setLoggedMeals] = useState<LoggedMeal[]>([]);
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [filterValues, setFilterValues] = useState({ calories: 0, protein: 0, carbs: 0, fat: 0 });
+  const [appliedFilters, setAppliedFilters] = useState({ calories: 0, protein: 0, carbs: 0, fat: 0 });
+  const [selectedHack, setSelectedHack] = useState<Hack | null>(null);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -40,7 +44,13 @@ const PlateMatesApp: React.FC = () => {
       macros: { cal: 580, p: 42, c: 65, f: 12 },
       likes: 24,
       verifications: 8,
-      image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80"
+      image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80",
+      items: [
+        { name: "White Rice (2 scoops)", macros: { cal: 200, p: 4, c: 44, f: 0 } },
+        { name: "Grilled Chicken (2 servings)", macros: { cal: 220, p: 32, c: 0, f: 6 } },
+        { name: "Sriracha", macros: { cal: 10, p: 0, c: 2, f: 0 } },
+        { name: "Chickpeas (1 scoop)", macros: { cal: 150, p: 6, c: 19, f: 6 } }
+      ]
     },
     {
       id: 2,
@@ -51,7 +61,12 @@ const PlateMatesApp: React.FC = () => {
       macros: { cal: 340, p: 12, c: 45, f: 14 },
       likes: 15,
       verifications: 3,
-      image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80"
+      image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80",
+      items: [
+        { name: "Hummus", macros: { cal: 140, p: 6, c: 12, f: 8 } },
+        { name: "Whole Wheat Pita", macros: { cal: 150, p: 5, c: 28, f: 2 } },
+        { name: "Roasted Peppers", macros: { cal: 50, p: 1, c: 5, f: 4 } }
+      ]
     },
     {
       id: 3,
@@ -62,7 +77,62 @@ const PlateMatesApp: React.FC = () => {
       macros: { cal: 620, p: 28, c: 80, f: 18 },
       likes: 42,
       verifications: 12,
-      image: "https://images.unsplash.com/photo-1473093226795-af9932fe5856?w=400&q=80"
+      image: "https://images.unsplash.com/photo-1473093226795-af9932fe5856?w=400&q=80",
+      items: [
+        { name: "Penne Marinara", macros: { cal: 450, p: 14, c: 75, f: 10 } },
+        { name: "Hard-boiled Eggs (2)", macros: { cal: 170, p: 14, c: 5, f: 8 } }
+      ]
+    },
+    {
+      id: 4,
+      user: "BulkSeason_Mike",
+      location: "Glen Dining Hall",
+      title: "The Mass Monster",
+      description: "Double burger patties, extra cheese, side of mashed potatoes, and a banana for dessert.",
+      macros: { cal: 920, p: 52, c: 70, f: 48 },
+      likes: 31,
+      verifications: 9,
+      image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80",
+      items: [
+        { name: "Burger Patties (2)", macros: { cal: 400, p: 36, c: 0, f: 28 } },
+        { name: "Extra Cheese", macros: { cal: 120, p: 7, c: 1, f: 10 } },
+        { name: "Mashed Potatoes", macros: { cal: 280, p: 5, c: 42, f: 8 } },
+        { name: "Banana", macros: { cal: 120, p: 4, c: 27, f: 2 } }
+      ]
+    },
+    {
+      id: 5,
+      user: "LeanQueen_Jess",
+      location: "West Village Dining Hall",
+      title: "Egg White Power Bowl",
+      description: "Egg whites from omelette station + spinach + turkey bacon + salsa. Zero carb gains!",
+      macros: { cal: 280, p: 38, c: 8, f: 10 },
+      likes: 56,
+      verifications: 15,
+      image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&q=80",
+      items: [
+        { name: "Egg Whites", macros: { cal: 100, p: 22, c: 0, f: 0 } },
+        { name: "Spinach", macros: { cal: 20, p: 2, c: 3, f: 0 } },
+        { name: "Turkey Bacon", macros: { cal: 120, p: 12, c: 2, f: 8 } },
+        { name: "Salsa", macros: { cal: 40, p: 2, c: 3, f: 2 } }
+      ]
+    },
+    {
+      id: 6,
+      user: "CarboLoad_Chris",
+      location: "Newell Dining Hall",
+      title: "Pre-Game Fuel Stack",
+      description: "Oatmeal base + banana slices + honey drizzle + peanut butter from the toast station.",
+      macros: { cal: 650, p: 18, c: 95, f: 22 },
+      likes: 38,
+      verifications: 11,
+      image: "https://images.unsplash.com/photo-1517673400267-0251440c45dc?w=400&q=80",
+      items: [
+        { name: "Oatmeal", macros: { cal: 300, p: 10, c: 54, f: 6 } },
+        { name: "Banana Slices", macros: { cal: 100, p: 1, c: 26, f: 0 } },
+        { name: "Honey Drizzle", macros: { cal: 60, p: 0, c: 17, f: 0 } },
+        { name: "Peanut Butter", macros: { cal: 190, p: 7, c: 8, f: 16 } }
+      ]
     }
   ]);
 
@@ -123,7 +193,7 @@ const PlateMatesApp: React.FC = () => {
     setTimeout(() => {
       setScanning(false);
       setShowDiscovery(true);
-    }, 2000);
+    }, 1000);
   };
 
   const postPlate = () => {
@@ -143,7 +213,16 @@ const PlateMatesApp: React.FC = () => {
       },
       likes: 0,
       verifications: 0,
-      image: "https://images.unsplash.com/photo-1543353071-873f17a7a088?w=400&q=80"
+      image: "https://images.unsplash.com/photo-1543353071-873f17a7a088?w=400&q=80",
+      items: selectedEntrees.map(e => ({
+        name: e.name,
+        macros: {
+          cal: e.nutrients.calories || 0,
+          p: e.nutrients.protein || 0,
+          c: e.nutrients.total_carbohydrates || 0,
+          f: e.nutrients.total_fat || 0
+        }
+      }))
     };
 
     setHacks([newHack, ...hacks]);
@@ -171,6 +250,29 @@ const PlateMatesApp: React.FC = () => {
 
   const isNavVisible = activeTab !== 'summary' && selectedEntrees.length === 0;
 
+  const filteredHacks = useMemo(() => {
+    const hasFilters = appliedFilters.calories > 0 || appliedFilters.protein > 0 || appliedFilters.carbs > 0 || appliedFilters.fat > 0;
+    if (!hasFilters) return hacks;
+    return hacks.filter(hack => 
+      hack.macros.cal >= appliedFilters.calories &&
+      hack.macros.p >= appliedFilters.protein &&
+      hack.macros.c >= appliedFilters.carbs &&
+      hack.macros.f >= appliedFilters.fat
+    );
+  }, [hacks, appliedFilters]);
+
+  const hasActiveFilters = appliedFilters.calories > 0 || appliedFilters.protein > 0 || appliedFilters.carbs > 0 || appliedFilters.fat > 0;
+
+  const handleApplyFilters = () => {
+    setAppliedFilters({ ...filterValues });
+    setShowFilterModal(false);
+  };
+
+  const handleResetFilters = () => {
+    setFilterValues({ calories: 0, protein: 0, carbs: 0, fat: 0 });
+    setAppliedFilters({ calories: 0, protein: 0, carbs: 0, fat: 0 });
+  };
+
   return (
     <MobileDeviceFrame>
       <Header />
@@ -178,21 +280,39 @@ const PlateMatesApp: React.FC = () => {
       {/* Main Content Area */}
       <main className={`flex-1 overflow-y-auto px-4 ${selectedEntrees.length > 0 ? 'pb-24' : 'pb-24'}`}>
         {activeTab === 'feed' && (
-          <div className="flex flex-col gap-6">
-            <div className="flex justify-between items-end mt-2">
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between items-center mt-2">
               <h2 className="text-lg font-bold text-slate-800">Campus Secret Menu</h2>
-              <span className="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-1 rounded">Latest Hacks</span>
+              <button
+                onClick={() => {
+                  setFilterValues({ ...appliedFilters });
+                  setShowFilterModal(true);
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${hasActiveFilters ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'}`}
+              >
+                <SlidersHorizontal size={14} />
+                Filter
+                {hasActiveFilters && <span className="bg-white text-emerald-600 rounded-full w-4 h-4 flex items-center justify-center text-[10px]">{Object.values(appliedFilters).filter(v => v > 0).length}</span>}
+              </button>
             </div>
 
-            {hacks.map((hack) => (
-              <HackCard
-                key={hack.id}
-                hack={hack}
-                onLike={handleLike}
-                onVerify={handleVerify}
-                onLog={handleLogMeal}
-              />
-            ))}
+            {filteredHacks.length === 0 ? (
+              <div className="p-8 border-2 border-dashed border-slate-100 rounded-3xl text-center">
+                <p className="text-sm text-slate-400 italic">No hacks match your filters.</p>
+                <button onClick={handleResetFilters} className="text-emerald-600 text-xs font-bold mt-2">Reset Filters</button>
+              </div>
+            ) : (
+              filteredHacks.map((hack) => (
+                <HackCard
+                  key={hack.id}
+                  hack={hack}
+                  onLike={handleLike}
+                  onVerify={handleVerify}
+                  onLog={handleLogMeal}
+                  onImageClick={setSelectedHack}
+                />
+              ))
+            )}
           </div>
         )}
 
@@ -226,7 +346,7 @@ const PlateMatesApp: React.FC = () => {
             {showDiscovery && (
               <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="flex justify-between items-center mb-2 px-1">
-                  <h2 className="text-lg font-black text-slate-800 italic uppercase">Identified Items</h2>
+                  <h2 className="text-lg font-black text-slate-800 italic uppercase">Items</h2>
                   <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">GLEN HALL</span>
                 </div>
 
@@ -404,11 +524,13 @@ const PlateMatesApp: React.FC = () => {
       </main>
 
       {/* Navigation Layer */}
-      <BottomNav
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        isVisible={isNavVisible}
-      />
+      {isNavVisible && (
+        <BottomNav
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          isVisible={isNavVisible}
+        />
+      )}
 
       {/* Plate Summary Bar (Un-floating) */}
       {activeTab !== 'feed' && activeTab !== 'stats' && selectedEntrees.length > 0 && activeTab !== 'summary' && (
@@ -417,6 +539,205 @@ const PlateMatesApp: React.FC = () => {
           onPost={postPlate}
           onViewSummary={() => setActiveTab('summary')}
         />
+      )}
+
+      {/* Filter Modal */}
+      {showFilterModal && (
+        <div className="absolute inset-0 bg-black/50 z-50 flex items-end animate-in fade-in duration-200">
+          <div className="bg-white w-full rounded-t-3xl p-6 animate-in slide-in-from-bottom duration-300">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-black text-slate-800 uppercase italic">Filter by Macros</h3>
+              <button onClick={() => setShowFilterModal(false)} className="text-slate-400 hover:text-slate-600 p-1">
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              {/* Calories Slider */}
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-bold text-slate-600 uppercase">Min Calories</span>
+                  <span className="text-sm font-black text-slate-800">{filterValues.calories}+</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="1000"
+                  step="50"
+                  value={filterValues.calories}
+                  onChange={(e) => setFilterValues({ ...filterValues, calories: Number(e.target.value) })}
+                  className="w-full h-2 bg-slate-200 rounded-full appearance-none cursor-pointer accent-slate-600"
+                />
+              </div>
+
+              {/* Protein Slider */}
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-bold text-emerald-600 uppercase">Min Protein</span>
+                  <span className="text-sm font-black text-slate-800">{filterValues.protein}g+</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="60"
+                  value={filterValues.protein}
+                  onChange={(e) => setFilterValues({ ...filterValues, protein: Number(e.target.value) })}
+                  className="w-full h-2 bg-emerald-100 rounded-full appearance-none cursor-pointer accent-emerald-600"
+                />
+              </div>
+
+              {/* Carbs Slider */}
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-bold text-blue-600 uppercase">Min Carbs</span>
+                  <span className="text-sm font-black text-slate-800">{filterValues.carbs}g+</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={filterValues.carbs}
+                  onChange={(e) => setFilterValues({ ...filterValues, carbs: Number(e.target.value) })}
+                  className="w-full h-2 bg-blue-100 rounded-full appearance-none cursor-pointer accent-blue-600"
+                />
+              </div>
+
+              {/* Fat Slider */}
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-bold text-orange-600 uppercase">Min Fat</span>
+                  <span className="text-sm font-black text-slate-800">{filterValues.fat}g+</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="50"
+                  value={filterValues.fat}
+                  onChange={(e) => setFilterValues({ ...filterValues, fat: Number(e.target.value) })}
+                  className="w-full h-2 bg-orange-100 rounded-full appearance-none cursor-pointer accent-orange-600"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-8">
+              <button
+                onClick={handleResetFilters}
+                className="flex-1 py-3 rounded-2xl font-bold text-sm text-slate-500 bg-slate-100"
+              >
+                Reset
+              </button>
+              <button
+                onClick={handleApplyFilters}
+                className="flex-1 py-3 rounded-2xl font-bold text-sm text-white bg-emerald-600"
+              >
+                Apply Filters
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Hack Detail Modal */}
+      {selectedHack && (
+        <div className="absolute inset-0 bg-black/50 z-50 flex items-end animate-in fade-in duration-200">
+          <div className="bg-white w-full h-[100%] rounded-t-3xl overflow-hidden animate-in slide-in-from-bottom duration-300 flex flex-col">
+            {/* Header with close button */}
+            <div className="flex justify-between items-center p-4 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-white font-bold text-xs">
+                  {selectedHack.user[0]}
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-slate-800">@{selectedHack.user}</p>
+                  <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">{selectedHack.location}</p>
+                </div>
+              </div>
+              <button onClick={() => setSelectedHack(null)} className="text-slate-400 hover:text-slate-600 p-1">
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Scrollable content */}
+            <div className="flex-1 overflow-y-auto">
+              {/* Image */}
+              <div className="aspect-video w-full">
+                <img src={selectedHack.image} alt={selectedHack.title} className="w-full h-full object-cover" />
+              </div>
+
+              <div className="p-4">
+                {/* Title & Description */}
+                <h3 className="text-xl font-black text-slate-800 italic mb-2">{selectedHack.title}</h3>
+                <p className="text-sm text-slate-500 mb-4">{selectedHack.description}</p>
+
+                {/* Total Macros Card */}
+                <div className="bg-slate-900 rounded-2xl p-4 mb-4">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Total Nutrition</p>
+                  <div className="grid grid-cols-4 gap-2">
+                    <div className="text-center">
+                      <p className="text-lg font-black text-white">{Math.round(selectedHack.macros.cal)}</p>
+                      <p className="text-[10px] text-slate-400 uppercase">Cal</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-lg font-black text-emerald-400">{Math.round(selectedHack.macros.p)}g</p>
+                      <p className="text-[10px] text-emerald-400 uppercase">Protein</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-lg font-black text-blue-400">{Math.round(selectedHack.macros.c)}g</p>
+                      <p className="text-[10px] text-blue-400 uppercase">Carbs</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-lg font-black text-orange-400">{Math.round(selectedHack.macros.f)}g</p>
+                      <p className="text-[10px] text-orange-400 uppercase">Fat</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Items List */}
+                <div className="mb-4">
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Items ({selectedHack.items.length})</p>
+                  <div className="space-y-2">
+                    {selectedHack.items.map((item, index) => (
+                      <div key={index} className="bg-slate-50 rounded-xl p-3 flex justify-between items-center">
+                        <span className="text-sm font-medium text-slate-800">{item.name}</span>
+                        <div className="flex gap-3 text-[10px] font-bold">
+                          <span className="text-slate-500">{Math.round(item.macros.cal)} cal</span>
+                          <span className="text-emerald-600">{Math.round(item.macros.p)}P</span>
+                          <span className="text-blue-600">{Math.round(item.macros.c)}C</span>
+                          <span className="text-orange-600">{Math.round(item.macros.f)}F</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Stats */}
+                <div className="flex gap-4 mb-4">
+                  <div className="flex items-center gap-1 text-slate-500">
+                    <span className="text-sm">❤️</span>
+                    <span className="text-xs font-bold">{selectedHack.likes} likes</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-slate-500">
+                    <span className="text-sm">✓</span>
+                    <span className="text-xs font-bold">{selectedHack.verifications} logged</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer Action */}
+            <div className="p-4 border-t border-slate-100">
+              <button
+                onClick={() => {
+                  handleLogMeal(selectedHack);
+                  setSelectedHack(null);
+                }}
+                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-2xl font-bold text-sm flex items-center justify-center gap-2"
+              >
+                <Zap size={16} /> Log This Meal
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </MobileDeviceFrame>
   );
