@@ -28,8 +28,9 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeTab, setActiveTab, isVisibl
 
       <button
         onClick={() => setActiveTab('stats')}
-        className={`flex flex-col items-center gap-1 ${activeTab === 'stats' ? 'text-emerald-600' : 'text-slate-400'}`}
+        className={`flex flex-col items-center gap-1 relative ${activeTab === 'stats' ? 'text-emerald-600' : 'text-slate-400'}`}
       >
+        <span className="absolute -top-2 -left-2 text-[11px] font-black text-emerald-500">$</span>
         <Navigation size={22} />
         <span className="text-[10px] font-bold">Progress</span>
       </button>

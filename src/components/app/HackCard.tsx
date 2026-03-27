@@ -42,9 +42,6 @@ const HackCard: React.FC<HackCardProps> = ({ hack, onLike, onVerify, onLog, onIm
             <span className="text-xs font-bold text-slate-800">{hack.macros.p}g</span>
           </div>
         </div>
-        <div className="absolute bottom-3 right-3 bg-emerald-600 text-white px-3 py-1 rounded-full text-[10px] font-black italic shadow-lg">
-          {hack.verifications >= 10 ? 'VERIFIED GAINS' : 'TRUST ME BRO 👍'}
-        </div>
       </div>
 
       {/* Post Content */}

@@ -16,6 +16,17 @@ const PlateMatesApp: React.FC = () => {
   const [filterValues, setFilterValues] = useState({ calories: 0, protein: 0, carbs: 0, fat: 0 });
   const [appliedFilters, setAppliedFilters] = useState({ calories: 0, protein: 0, carbs: 0, fat: 0 });
   const [selectedHack, setSelectedHack] = useState<Hack | null>(null);
+  const [description, setDescription] = useState("");
+  const [selectedEntrees, setSelectedEntrees] = useState<NutrientData[]>([]);
+
+  // Prefill description when selectedEntrees changes
+  useEffect(() => {
+    if (selectedEntrees.length > 0) {
+      setDescription(selectedEntrees.map(e => e.name).join(", "));
+    } else {
+      setDescription("");
+    }
+  }, [selectedEntrees]);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -138,8 +149,7 @@ const PlateMatesApp: React.FC = () => {
 
   const [scanning, setScanning] = useState<boolean>(false);
   const [showDiscovery, setShowDiscovery] = useState<boolean>(false);
-  const [selectedEntrees, setSelectedEntrees] = useState<NutrientData[]>([]);
-
+  
   const availableEntrees = nutrientDataRaw as NutrientData[];
 
   const dailyTotals = useMemo(() => {
@@ -204,7 +214,7 @@ const PlateMatesApp: React.FC = () => {
       user: "Me",
       location: "Glen Dining Hall",
       title: "My Custom Plate",
-      description: selectedEntrees.map(e => e.name).join(", "),
+      description: description, 
       macros: {
         cal: Math.round(plateTotals.cal),
         p: Math.round(plateTotals.p),
@@ -400,6 +410,18 @@ const PlateMatesApp: React.FC = () => {
               </div>
             </div>
 
+            {/* Description Input */}
+            <div className="mb-6">
+              <label htmlFor="plate-description" className="block text-slate-600 font-bold mb-2 text-xs uppercase tracking-wide">Description</label>
+              <input
+                id="plate-description"
+                type="text"
+                className="w-full border border-slate-200 rounded-xl p-3 focus:outline-none focus:border-emerald-500 text-sm text-slate-900"
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+                placeholder="Describe your plate..."
+              />
+            </div>
             <div className="mb-8">
               <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 px-2">Selected Items ({selectedEntrees.length})</h3>
               <div className="flex flex-col gap-3">
