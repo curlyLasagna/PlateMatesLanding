@@ -13,8 +13,18 @@ const PlateMatesApp: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('feed');
   const [loggedMeals, setLoggedMeals] = useState<LoggedMeal[]>([]);
   const [showFilterModal, setShowFilterModal] = useState(false);
-  const [filterValues, setFilterValues] = useState({ calories: 0, protein: 0, carbs: 0, fat: 0 });
-  const [appliedFilters, setAppliedFilters] = useState({ calories: 0, protein: 0, carbs: 0, fat: 0 });
+const [filterValues, setFilterValues] = useState({
+  calories: { min: 0, max: 1000 },
+  protein: { min: 0, max: 60 },
+  carbs: { min: 0, max: 100 },
+  fat: { min: 0, max: 50 },
+});
+const [appliedFilters, setAppliedFilters] = useState({
+  calories: { min: 0, max: 1000 },
+  protein: { min: 0, max: 60 },
+  carbs: { min: 0, max: 100 },
+  fat: { min: 0, max: 50 },
+});
   const [selectedHack, setSelectedHack] = useState<Hack | null>(null);
   const [description, setDescription] = useState("");
   const [selectedEntrees, setSelectedEntrees] = useState<NutrientData[]>([]);
@@ -260,28 +270,54 @@ const PlateMatesApp: React.FC = () => {
 
   const isNavVisible = activeTab !== 'summary' && selectedEntrees.length === 0;
 
-  const filteredHacks = useMemo(() => {
-    const hasFilters = appliedFilters.calories > 0 || appliedFilters.protein > 0 || appliedFilters.carbs > 0 || appliedFilters.fat > 0;
-    if (!hasFilters) return hacks;
-    return hacks.filter(hack => 
-      hack.macros.cal >= appliedFilters.calories &&
-      hack.macros.p >= appliedFilters.protein &&
-      hack.macros.c >= appliedFilters.carbs &&
-      hack.macros.f >= appliedFilters.fat
-    );
-  }, [hacks, appliedFilters]);
+type MacroKey = 'calories' | 'protein' | 'carbs' | 'fat';
+const macroRanges: Record<MacroKey, { min: number; max: number }> = {
+  calories: { min: 0, max: 1000 },
+  protein: { min: 0, max: 60 },
+  carbs: { min: 0, max: 100 },
+  fat: { min: 0, max: 50 },
+};
+const macroKeys: MacroKey[] = ['calories', 'protein', 'carbs', 'fat'];
 
-  const hasActiveFilters = appliedFilters.calories > 0 || appliedFilters.protein > 0 || appliedFilters.carbs > 0 || appliedFilters.fat > 0;
+function isFullRange(macro: MacroKey, val: { min: number; max: number }) {
+  return val.min === macroRanges[macro].min && val.max === macroRanges[macro].max;
+}
 
-  const handleApplyFilters = () => {
-    setAppliedFilters({ ...filterValues });
-    setShowFilterModal(false);
-  };
+const filteredHacks = useMemo(() => {
+  const hasFilters = macroKeys.some((macro) => !isFullRange(macro, appliedFilters[macro]));
+  if (!hasFilters) return hacks;
+  return hacks.filter(hack => (
+    hack.macros.cal >= appliedFilters.calories.min && hack.macros.cal <= appliedFilters.calories.max &&
+    hack.macros.p >= appliedFilters.protein.min && hack.macros.p <= appliedFilters.protein.max &&
+    hack.macros.c >= appliedFilters.carbs.min && hack.macros.c <= appliedFilters.carbs.max &&
+    hack.macros.f >= appliedFilters.fat.min && hack.macros.f <= appliedFilters.fat.max
+  ));
+}, [hacks, appliedFilters]);
 
-  const handleResetFilters = () => {
-    setFilterValues({ calories: 0, protein: 0, carbs: 0, fat: 0 });
-    setAppliedFilters({ calories: 0, protein: 0, carbs: 0, fat: 0 });
-  };
+const hasActiveFilters = macroKeys.some((macro) => !isFullRange(macro, appliedFilters[macro]));
+
+const handleApplyFilters = () => {
+  setAppliedFilters({ ...filterValues });
+  setShowFilterModal(false);
+};
+
+function handleResetFilters() {
+  setFilterValues({
+    calories: { ...macroRanges.calories },
+    protein: { ...macroRanges.protein },
+    carbs: { ...macroRanges.carbs },
+    fat: { ...macroRanges.fat },
+  });
+  setAppliedFilters({
+    calories: { ...macroRanges.calories },
+    protein: { ...macroRanges.protein },
+    carbs: { ...macroRanges.carbs },
+    fat: { ...macroRanges.fat },
+  });
+}
+
+
+
 
   return (
     <MobileDeviceFrame>
@@ -302,7 +338,7 @@ const PlateMatesApp: React.FC = () => {
               >
                 <SlidersHorizontal size={14} />
                 Filter
-                {hasActiveFilters && <span className="bg-white text-emerald-600 rounded-full w-4 h-4 flex items-center justify-center text-[10px]">{Object.values(appliedFilters).filter(v => v > 0).length}</span>}
+                {hasActiveFilters && <span className="bg-white text-emerald-600 rounded-full w-4 h-4 flex items-center justify-center text-[10px]">{macroKeys.filter(macro => !isFullRange(macro, appliedFilters[macro])).length}</span>}
               </button>
             </div>
 
@@ -571,69 +607,208 @@ const PlateMatesApp: React.FC = () => {
             </div>
 
             <div className="space-y-6">
-              {/* Calories Slider */}
+              {/* Calories Double Range Slider */}
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-bold text-slate-600 uppercase">Min Calories</span>
-                  <span className="text-sm font-black text-slate-800">{filterValues.calories}+</span>
+                  <span className="text-xs font-bold text-slate-600 uppercase">Calories Range</span>
+                  <span className="text-sm font-black text-slate-800">{filterValues.calories.min} - {filterValues.calories.max}</span>
                 </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="1000"
-                  step="50"
-                  value={filterValues.calories}
-                  onChange={(e) => setFilterValues({ ...filterValues, calories: Number(e.target.value) })}
-                  className="w-full h-2 bg-slate-200 rounded-full appearance-none cursor-pointer accent-slate-600"
-                />
+                <div className="relative h-6">
+                  <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-2 bg-slate-200 rounded-full" />
+                  <input
+                    type="range"
+                    min="0"
+                    max="1000"
+                    step="50"
+                    value={filterValues.calories.min}
+                    onChange={e => {
+                      const val = Number(e.target.value);
+                      if (val <= filterValues.calories.max) {
+                        setFilterValues(prev => ({
+                          ...prev,
+                          calories: { ...prev.calories, min: val }
+                        }));
+                      }
+                    }}
+                    className="absolute top-0 left-0 w-full h-6 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-slate-600 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-slate-600 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+                    style={{ zIndex: 3 }}
+                  />
+                  <input
+                    type="range"
+                    min="0"
+                    max="1000"
+                    step="50"
+                    value={filterValues.calories.max}
+                    onChange={e => {
+                      const val = Number(e.target.value);
+                      if (val >= filterValues.calories.min) {
+                        setFilterValues(prev => ({
+                          ...prev,
+                          calories: { ...prev.calories, max: val }
+                        }));
+                      }
+                    }}
+                    className="absolute top-0 left-0 w-full h-6 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-slate-800 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-slate-800 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+                    style={{ zIndex: 4 }}
+                  />
+                </div>
+                <div className="flex justify-between text-[10px] font-bold text-slate-400 mt-1">
+                  <span>0</span>
+                  <span>1000</span>
+                </div>
               </div>
 
-              {/* Protein Slider */}
+              {/* Protein Double Range Slider */}
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-bold text-emerald-600 uppercase">Min Protein</span>
-                  <span className="text-sm font-black text-slate-800">{filterValues.protein}g+</span>
+                  <span className="text-xs font-bold text-emerald-600 uppercase">Protein Range</span>
+                  <span className="text-sm font-black text-slate-800">{filterValues.protein.min} - {filterValues.protein.max}g</span>
                 </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="60"
-                  value={filterValues.protein}
-                  onChange={(e) => setFilterValues({ ...filterValues, protein: Number(e.target.value) })}
-                  className="w-full h-2 bg-emerald-100 rounded-full appearance-none cursor-pointer accent-emerald-600"
-                />
+                <div className="relative h-6">
+                  <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-2 bg-emerald-100 rounded-full" />
+                  <input
+                    type="range"
+                    min="0"
+                    max="60"
+                    step="1"
+                    value={filterValues.protein.min}
+                    onChange={e => {
+                      const val = Number(e.target.value);
+                      if (val <= filterValues.protein.max) {
+                        setFilterValues(prev => ({
+                          ...prev,
+                          protein: { ...prev.protein, min: val }
+                        }));
+                      }
+                    }}
+                    className="absolute top-0 left-0 w-full h-6 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-emerald-500 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-emerald-500 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+                    style={{ zIndex: 3 }}
+                  />
+                  <input
+                    type="range"
+                    min="0"
+                    max="60"
+                    step="1"
+                    value={filterValues.protein.max}
+                    onChange={e => {
+                      const val = Number(e.target.value);
+                      if (val >= filterValues.protein.min) {
+                        setFilterValues(prev => ({
+                          ...prev,
+                          protein: { ...prev.protein, max: val }
+                        }));
+                      }
+                    }}
+                    className="absolute top-0 left-0 w-full h-6 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-emerald-700 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-emerald-700 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+                    style={{ zIndex: 4 }}
+                  />
+                </div>
+                <div className="flex justify-between text-[10px] font-bold text-emerald-300 mt-1">
+                  <span>0</span>
+                  <span>60g</span>
+                </div>
               </div>
 
-              {/* Carbs Slider */}
+              {/* Carbs Double Range Slider */}
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-bold text-blue-600 uppercase">Min Carbs</span>
-                  <span className="text-sm font-black text-slate-800">{filterValues.carbs}g+</span>
+                  <span className="text-xs font-bold text-blue-600 uppercase">Carbs Range</span>
+                  <span className="text-sm font-black text-slate-800">{filterValues.carbs.min} - {filterValues.carbs.max}g</span>
                 </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={filterValues.carbs}
-                  onChange={(e) => setFilterValues({ ...filterValues, carbs: Number(e.target.value) })}
-                  className="w-full h-2 bg-blue-100 rounded-full appearance-none cursor-pointer accent-blue-600"
-                />
+                <div className="relative h-6">
+                  <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-2 bg-blue-100 rounded-full" />
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="1"
+                    value={filterValues.carbs.min}
+                    onChange={e => {
+                      const val = Number(e.target.value);
+                      if (val <= filterValues.carbs.max) {
+                        setFilterValues(prev => ({
+                          ...prev,
+                          carbs: { ...prev.carbs, min: val }
+                        }));
+                      }
+                    }}
+                    className="absolute top-0 left-0 w-full h-6 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-500 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-blue-500 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+                    style={{ zIndex: 3 }}
+                  />
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="1"
+                    value={filterValues.carbs.max}
+                    onChange={e => {
+                      const val = Number(e.target.value);
+                      if (val >= filterValues.carbs.min) {
+                        setFilterValues(prev => ({
+                          ...prev,
+                          carbs: { ...prev.carbs, max: val }
+                        }));
+                      }
+                    }}
+                    className="absolute top-0 left-0 w-full h-6 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-700 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-blue-700 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+                    style={{ zIndex: 4 }}
+                  />
+                </div>
+                <div className="flex justify-between text-[10px] font-bold text-blue-300 mt-1">
+                  <span>0</span>
+                  <span>100g</span>
+                </div>
               </div>
 
-              {/* Fat Slider */}
+              {/* Fat Double Range Slider */}
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-bold text-orange-600 uppercase">Min Fat</span>
-                  <span className="text-sm font-black text-slate-800">{filterValues.fat}g+</span>
+                  <span className="text-xs font-bold text-orange-600 uppercase">Fat Range</span>
+                  <span className="text-sm font-black text-slate-800">{filterValues.fat.min} - {filterValues.fat.max}g</span>
                 </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="50"
-                  value={filterValues.fat}
-                  onChange={(e) => setFilterValues({ ...filterValues, fat: Number(e.target.value) })}
-                  className="w-full h-2 bg-orange-100 rounded-full appearance-none cursor-pointer accent-orange-600"
-                />
+                <div className="relative h-6">
+                  <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-2 bg-orange-100 rounded-full" />
+                  <input
+                    type="range"
+                    min="0"
+                    max="50"
+                    step="1"
+                    value={filterValues.fat.min}
+                    onChange={e => {
+                      const val = Number(e.target.value);
+                      if (val <= filterValues.fat.max) {
+                        setFilterValues(prev => ({
+                          ...prev,
+                          fat: { ...prev.fat, min: val }
+                        }));
+                      }
+                    }}
+                    className="absolute top-0 left-0 w-full h-6 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-orange-500 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-orange-500 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+                    style={{ zIndex: 3 }}
+                  />
+                  <input
+                    type="range"
+                    min="0"
+                    max="50"
+                    step="1"
+                    value={filterValues.fat.max}
+                    onChange={e => {
+                      const val = Number(e.target.value);
+                      if (val >= filterValues.fat.min) {
+                        setFilterValues(prev => ({
+                          ...prev,
+                          fat: { ...prev.fat, max: val }
+                        }));
+                      }
+                    }}
+                    className="absolute top-0 left-0 w-full h-6 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-orange-700 [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-orange-700 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+                    style={{ zIndex: 4 }}
+                  />
+                </div>
+                <div className="flex justify-between text-[10px] font-bold text-orange-300 mt-1">
+                  <span>0</span>
+                  <span>50g</span>
+                </div>
               </div>
             </div>
 

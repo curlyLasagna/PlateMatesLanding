@@ -4,7 +4,7 @@ const Header: React.FC = () => {
   return (
     <header className="px-6 py-4 flex flex-col gap-2">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-black text-emerald-600 tracking-tighter italic">PLATEMATE</h1>
+        <h1 className="text-2xl font-black text-emerald-600 tracking-tighter italic">PLATEMATES</h1>
         <div className="bg-emerald-100 text-emerald-700 p-2 rounded-full">
           <User size={20} />
         </div>
